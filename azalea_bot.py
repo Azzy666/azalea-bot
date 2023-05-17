@@ -2,6 +2,9 @@ import os
 import discord
 import random
 import datetime
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 client = discord.Client(intents = discord.Intents().all())
 
@@ -9,7 +12,7 @@ client = discord.Client(intents = discord.Intents().all())
 @client.event
 async def on_ready():
     cliccGeneral = await client.fetch_channel(915361057185357881)
-    print('We have logged in as {0.user}'.format(client))
+    print("We have logged in as {0.user}".format(client))
 
 @client.event
 async def on_message(message):
@@ -61,4 +64,4 @@ async def on_message(message):
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
 
-client.run("TOKEN")
+client.run(os.getenv("TOKEN"))
