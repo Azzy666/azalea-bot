@@ -3,20 +3,30 @@ import discord
 import random
 import datetime
 from dotenv import load_dotenv
+import json
 
 load_dotenv(".env")
 
 client = discord.Client(intents = discord.Intents().all())
 
+def write_to_quotes(d: dict) -> None:
+    with open('.\quotes.json','w') as f:
+        data = json.dumps(d)
+        f.write(data)
+
+def get_quotes() -> dict:
+    with open('.\quotes.json','r') as f:
+        data = f.read()
+        data = json.loads(data)
+    return data
 
 @client.event
 async def on_ready():
-    cliccGeneral = await client.fetch_channel(915361057185357881)
+    cliccGeneral = await client.fetch_channel(915361057185357883)
     print("We have logged in as {0.user}".format(client))
 
 @client.event
 async def on_message(message):
-
     if message.author == client.user:
         return
 
@@ -61,6 +71,25 @@ async def on_message(message):
             async for message in message.channel.history(limit=None, after=yesterday):
                 num += 1
             await message.channel.send("Number of messages sent since yesterday in this channel: " + str(num))
+
+        elif str(message.type) == "MessageType.reply":
+            if "setQuote" in message.content:
+                referenceMessage = await message.channel.fetch_message(message.reference.message_id)
+                quotes = get_quotes()
+                if str(referenceMessage.author) in quotes:
+                    quotes[str(referenceMessage.author)].append(str(referenceMessage.content))
+                else:
+                    quotes[str(referenceMessage.author)] = [str(referenceMessage.content)]
+                write_to_quotes(quotes)
+
+        elif "getQuotes" in message.content:
+            data = get_quotes()
+            output = ""
+            for key in data:
+                for item in data[key]:
+                    output += (key + ": " + item + "\n")
+            await message.channel.send(output)
+
         else:
             await message.channel.send("Sorry, I don't recognize that command.")
 
