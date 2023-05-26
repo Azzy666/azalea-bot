@@ -31,13 +31,16 @@ async def on_message(message):
         return
 
     if message.author.id == 607020747650629633:
-        await message.add_reaction("🌸")
+        if random.randint(1, 30) == 1:
+            await message.add_reaction("🌸")
 
-    if message.author.id == 726150411475484713: 
-        await message.add_reaction("🐉")
+    if message.author.id == 726150411475484713:
+        if random.randint(1, 30) == 1:
+            await message.add_reaction("🐉")
 
     if message.author.id == 538515351592370176:
-        await message.add_reaction("🐐")
+        if random.randint(1, 30) == 1:
+            await message.add_reaction("🐐")
 
     if message.author.id == 610951370744266780:
         match random.randint(0,2):
@@ -59,7 +62,7 @@ async def on_message(message):
     if message.content.startswith("a."):
 
         if "sendFlower" in message.content:
-            await message.channel.send(file=discord.File(r'C:\Users\idtec\OneDrive\Documents\coding\Pie Thon\Azalea Bot\azalea.jpeg'))
+            await message.channel.send(file=discord.File(r'.\azalea.jpeg'))
 
         elif "memberStats" in message.content:
             guild = await client.fetch_guild(message.guild.id, with_counts=True)
